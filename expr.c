@@ -31,7 +31,6 @@ int  is_integer(char *) ;
 int  is_variable(char *) ;
 void add_item_to_dict(char var[], int val) ;
 
-
 int main()
 {
    int     numtokens ; 
