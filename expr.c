@@ -11,7 +11,6 @@
 char tokens[MAXTOKENS][TOKENLENGTH] ;
 char str[N] ; 
 int  cur = 0 ; 
-bool in_dict ;
 char dict_keys[MAXTOKENS][TOKENLENGTH] ;
 int dict_vals[MAXTOKENS];
 int nof_dict_items = 0;
@@ -75,6 +74,7 @@ int begin(char *str)
    char str1[N];
    str1[0] = '\0';
    if (! assignment(str1)) {
+      cur = 0; // reset cursor since it might have moved due to token starting with a variable
       if (! hyperexpr(str1)) {
          return 0;
       }
@@ -281,7 +281,7 @@ int factor(char *str)
     } 
     if ( is_variable(tokens[cur])) { // replace variable with the value stored, 0 if not declared
       // Check if the "brand" key exists in the dictionary
-      in_dict = 0;
+      int in_dict = 0;
       for (int i = 0; i < nof_dict_items; i++) {
          if (strcmp(dict_keys[i], tokens[cur]) == 0) {
             in_dict = 1;
