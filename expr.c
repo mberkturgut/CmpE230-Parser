@@ -16,6 +16,8 @@ char dict_keys[MAXTOKENS][TOKENLENGTH] ;
 int dict_vals[MAXTOKENS];
 int nof_dict_items = 0;
 
+int  begin(char *) ;
+int  assignment(char *) ;
 int  hyperexpr(char *) ;
 int  moresuperexprs(char *) ;
 int  superexpr(char *) ;
@@ -54,7 +56,8 @@ int main()
    */
 
    // parse the expression 
-   hyperexpr(str) ; 
+   //hyperexpr(str) ; 
+   begin(str) ;
    printf("%s\n",str) ; 
   
    return(0) ; 
@@ -68,6 +71,42 @@ void add_item_to_dict (char var[], int val)
    nof_dict_items++; 
 }
 
+int begin(char *str)
+{
+   char str1[N];
+   str1[0] = '\0';
+   if (! assignment(str1)) {
+      if (! hyperexpr(str1)) {
+         return 0;
+      }
+   }
+   strcpy(str,str1) ; 
+   return(1) ; 
+}
+
+int assignment(char *str)
+{
+   char str1[N], str2[N] ; 
+   str1[0] = str2[0] = '\0' ;
+   if (is_variable(tokens[cur])) { //case 1 - variable initialized | case 2 - variable reassigned to a different value
+      strcpy(str1, tokens[cur]);
+      strcat(str1, " ");
+      cur++;
+      if (strcmp("=", tokens[cur]) == 0) {
+         strcat(str1, tokens[cur]);
+         strcat(str1, " ");
+         cur++;
+         if (! hyperexpr(str2)){
+            return(0) ; 
+         }
+         strcat(str2,str1) ; 
+         strcpy(str,str2) ; 
+         return(1) ; 
+      }
+      return 0;
+   }
+   return 0;
+}
 
 int hyperexpr(char *str)
 {
