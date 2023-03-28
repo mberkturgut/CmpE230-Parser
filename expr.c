@@ -249,7 +249,7 @@ int morefactors(char *str)
    
    str1[0] = str2[0] = str3[0] = '\0' ; 
    
-   if ( (strcmp(tokens[cur],"*") == 0 ) || (strcmp(tokens[cur],"/") == 0 ) ) {
+   if (strcmp(tokens[cur],"*") == 0 ) {
        strcpy(str1,tokens[cur]) ; 
        strcat(str1," ") ; 
        cur++ ;  
