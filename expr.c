@@ -286,7 +286,7 @@ int factor(char *str)
     } 
 
     //factor -> function
-    if ( strcmp(tokens[cur],"not") == 0 ) { //function -> not(hyperexpr)
+   if ( strcmp(tokens[cur],"not") == 0 ) { //function -> not(hyperexpr)
       strcpy(str1,tokens[cur]) ; 
       strcat(str1," ") ; 
       cur++ ; 
@@ -304,7 +304,37 @@ int factor(char *str)
       strcat(str2, str1);
       strcpy(str,str2) ; 
       return(1) ; 
-    }
+   }
+
+   if ( (strcmp(tokens[cur],"xor") == 0) || (strcmp(tokens[cur],"ls") == 0) || (strcmp(tokens[cur],"rs") == 0) || (strcmp(tokens[cur],"lr") == 0) || (strcmp(tokens[cur],"rr") == 0) ) { //function -> xor|ls|rs|lr|rr(hyperexpr,hyperexpr)
+      strcpy(str1,tokens[cur]) ; 
+      strcat(str1," ") ; 
+      cur++ ; 
+      if ( strcmp(tokens[cur],"(") != 0 ) {
+         return (0);
+      }
+      cur++ ;
+      if ( ! hyperexpr(str2) ) {
+         return(0) ; 
+      }
+      if ( strcmp(tokens[cur],",") != 0 ) {
+         return (0);
+      }
+      cur++;
+      if ( ! hyperexpr(str3) ) {
+         return(0) ; 
+      }
+      if ( strcmp(tokens[cur],")") != 0 ) { 
+         return(0) ;
+      }
+      cur++ ;
+      strcat(str2,str3);
+      strcat(str2, str1);
+      strcpy(str,str2) ; 
+      return(1) ; 
+   }
+
+    
 
     if ( is_variable(tokens[cur])) { // factor -> var: replace variable with the value stored, replace with 0 if not declared
       int in_dict = 0;
