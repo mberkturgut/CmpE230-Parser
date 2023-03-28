@@ -69,7 +69,7 @@ int main()
 void evaluator (char *str)
 {
    int cur_eval = 0;
-   int op1, op2;
+   long long int op1, op2;
    char stack1[MAXTOKENS][TOKENLENGTH], stack2[MAXTOKENS][TOKENLENGTH] ;
    int top1, top2 = -1;
    char str_c[N];
@@ -92,16 +92,33 @@ void evaluator (char *str)
       strcpy(stack2[++top2],stack1[top1--]);     
    }
 
-   //start evaluating
+   //start evaluating: pop from stack2, make the operation, put the result to stack1 till there is no element left
    cur_eval = 0;
    while (true) {
-      strcpy(elm,stack2[top2--]);
+      strcpy(elm,stack2[top2--]); //pop the element
+      
+      if((strcmp(elm, "not")) == 0){
+         op1 = strtoll(stack1[top1--], NULL, 10);
+         sprintf(stack1[++top1], "%lli", ~op1);
+      }
+
       if ((strcmp(elm, "+") == 0)|| (strcmp(elm, "*") == 0) || (strcmp(elm, "-") == 0) ||(strcmp(elm, "&") == 0) || (strcmp(elm, "|") == 0) || (strcmp(elm,"xor") == 0) || (strcmp(elm,"ls") == 0) || (strcmp(elm,"rs") == 0) || (strcmp(elm,"lr") == 0) || (strcmp(elm,"rr") == 0) ) {//if elm is operand
-         op2 = atoi(stack1[top1--]);
-         op1 = atoi(stack1[top1--]);
-         //printf("%d %d", op2, op1);
+         op2 = strtoll(stack1[top1--], NULL, 10);
+         op1 = strtoll(stack1[top1--], NULL, 10);
          if (strcmp(elm, "+") == 0) {
-            sprintf(stack1[++top1], "%d", op1 + op2);
+            sprintf(stack1[++top1], "%lli", op1 + op2);
+         }
+         if (strcmp(elm, "*") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 * op2);
+         }
+         if (strcmp(elm, "-") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 - op2);
+         }
+         if (strcmp(elm, "&") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 & op2);
+         }
+         if (strcmp(elm, "|") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 | op2);
          }
       }
       else { //elm is a number, keep pushing to stack1 until seeing an operator in stack2
