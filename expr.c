@@ -120,6 +120,15 @@ void evaluator (char *str)
          if (strcmp(elm, "|") == 0) {
             sprintf(stack1[++top1], "%lli", op1 | op2);
          }
+         if (strcmp(elm, "xor") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 ^ op2);
+         }
+         if (strcmp(elm, "ls") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 << op2);
+         }
+         if (strcmp(elm, "rs") == 0) {
+            sprintf(stack1[++top1], "%lli", op1 >> op2);
+         }
       }
       else { //elm is a number, keep pushing to stack1 until seeing an operator in stack2
          strcpy(stack1[++top1],elm);
