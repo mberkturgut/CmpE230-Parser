@@ -46,6 +46,7 @@ int main()
    add_item_to_dict("x", 1);
    add_item_to_dict("y", 2);
 
+   //print the tokens
    /*
    for(int i = 0; i < numtokens; i++) {
       printf("%s ", tokens[i]);
@@ -53,12 +54,14 @@ int main()
    printf("\n");
    */
    
+   
 
    // parse the expression  
    if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
          printf("%s\n",str) ;
       }
    else {
+      //printf("%s\n",str) ;
       printf("Error!");
    }
   
@@ -272,19 +275,38 @@ int morefactors(char *str)
 
 int factor(char *str)
 {
-   char str1[N] ; 
-   
-   str1[0] = '\0' ; 
+   char str1[N], str2[N], str3[N] ; 
+   str1[0] = str2[0] = str3[0] = '\0' ; 
 
-    //printf("%s\n",tokens[cur]) ; 
-    if ( is_integer(tokens[cur])) {
+    if ( is_integer(tokens[cur])) { //factor -> int
        strcpy(str,tokens[cur]) ; 
        strcat(str," ") ; 
        cur++ ; 
        return(1) ; 
     } 
-    if ( is_variable(tokens[cur])) { // replace variable with the value stored, 0 if not declared
-      // Check if the "brand" key exists in the dictionary
+
+    //factor -> function
+    if ( strcmp(tokens[cur],"not") == 0 ) { //function -> not(hyperexpr)
+      strcpy(str1,tokens[cur]) ; 
+      strcat(str1," ") ; 
+      cur++ ; 
+      if ( strcmp(tokens[cur],"(") != 0 ) {
+         return (0);
+      }
+      cur++ ;
+      if ( ! hyperexpr(str2) ) {
+         return(0) ; 
+      }
+      if ( strcmp(tokens[cur],")") != 0 ) { 
+         return(0) ;
+      }
+      cur++ ;
+      strcat(str2, str1);
+      strcpy(str,str2) ; 
+      return(1) ; 
+    }
+
+    if ( is_variable(tokens[cur])) { // factor -> var: replace variable with the value stored, replace with 0 if not declared
       int in_dict = 0;
       for (int i = 0; i < nof_dict_items; i++) {
          if (strcmp(dict_keys[i], tokens[cur]) == 0) {
@@ -302,7 +324,7 @@ int factor(char *str)
       return(1) ; 
     } 
     
-    if ( strcmp(tokens[cur],"(") == 0 ) {
+    if ( strcmp(tokens[cur],"(") == 0 ) { //factor -> (hyperexpr)
        cur++ ; 
        if ( ! hyperexpr(str1) ) {
           return(0) ;    
