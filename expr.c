@@ -29,6 +29,7 @@ int  morefactors(char *) ;
 int  is_integer(char *) ;
 int  is_variable(char *) ;
 void add_item_to_dict(char var[], int val) ;
+void evaluator (char *);
 
 int main()
 {
@@ -54,20 +55,64 @@ int main()
    printf("\n");
    */
    
-   
-
    // parse the expression  
    if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
-         printf("%s\n",str) ;
+      evaluator(str);
       }
    else {
-      //printf("%s\n",str) ;
       printf("Error!");
    }
   
    return(0) ; 
 }
 
+void evaluator (char *str)
+{
+   int cur_eval = 0;
+   int op1, op2;
+   char stack1[MAXTOKENS][TOKENLENGTH], stack2[MAXTOKENS][TOKENLENGTH] ;
+   int top1, top2 = -1;
+   char str_c[N];
+   char elm[TOKENLENGTH];
+   char operand;
+
+   strcpy(str_c,str);
+   
+   //add to the stack
+   char* token_str = strtok(str_c, " ");
+   do {
+      strcpy(stack1[cur_eval], token_str);
+      cur_eval++;
+      token_str = strtok(NULL, " ");
+   } while(token_str != NULL);
+   top1 = cur_eval-1; //last index of the first queue
+   
+   //reverse the stack1, store in stack2. Reverse order used to get the first token when popping 
+   while (top1 >= 0) {
+      strcpy(stack2[++top2],stack1[top1--]);     
+   }
+
+   //start evaluating
+   cur_eval = 0;
+   while (true) {
+      strcpy(elm,stack2[top2--]);
+      if ((strcmp(elm, "+") == 0)|| (strcmp(elm, "*") == 0) || (strcmp(elm, "-") == 0) ||(strcmp(elm, "&") == 0) || (strcmp(elm, "|") == 0) || (strcmp(elm,"xor") == 0) || (strcmp(elm,"ls") == 0) || (strcmp(elm,"rs") == 0) || (strcmp(elm,"lr") == 0) || (strcmp(elm,"rr") == 0) ) {//if elm is operand
+         op2 = atoi(stack1[top1--]);
+         op1 = atoi(stack1[top1--]);
+         //printf("%d %d", op2, op1);
+         if (strcmp(elm, "+") == 0) {
+            sprintf(stack1[++top1], "%d", op1 + op2);
+         }
+      }
+      else { //elm is a number, keep pushing to stack1 until seeing an operator in stack2
+         strcpy(stack1[++top1],elm);
+      }
+      if(top2 < 0){
+         printf("%s", stack1[0]);
+         break;
+      }  
+   } 
+}
 
 void add_item_to_dict (char var[], int val) 
 {
@@ -333,8 +378,6 @@ int factor(char *str)
       strcpy(str,str2) ; 
       return(1) ; 
    }
-
-    
 
     if ( is_variable(tokens[cur])) { // factor -> var: replace variable with the value stored, replace with 0 if not declared
       int in_dict = 0;
