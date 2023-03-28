@@ -48,15 +48,19 @@ int main()
 
    /*
    for(int i = 0; i < numtokens; i++) {
-      printf("%c ", *tokens[i]);
+      printf("%s ", tokens[i]);
    }
    printf("\n");
    */
+   
 
-   // parse the expression 
-   //hyperexpr(str) ; 
-   begin(str) ;
-   printf("%s\n",str) ; 
+   // parse the expression  
+   if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
+         printf("%s\n",str) ;
+      }
+   else {
+      printf("Error!");
+   }
   
    return(0) ; 
 }
