@@ -6,7 +6,8 @@
 
 #define MAXTOKENS   100 
 #define TOKENLENGTH 20 
-#define N  1000 
+#define N  1000
+#define INT_BITS 64 // to use in left & right rotation
 
 char tokens[MAXTOKENS][TOKENLENGTH] ;
 char str[N] ; 
@@ -35,22 +36,20 @@ int main()
 {
    int     numtokens ; 
    char    str[N]   ; 
+   char input[N];
    
    // read the tokens 
    numtokens = 0 ;
+
    while (scanf("%s",tokens[numtokens]) != EOF) {
-      numtokens++ ; 
+      printf("%s\n", tokens[numtokens]);
+      if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
+         break;
+      }
+      numtokens++ ;
    } 
    sprintf(tokens[numtokens],"$") ;
    numtokens++ ;
-
-   //print the tokens
-   /*
-   for(int i = 0; i < numtokens; i++) {
-      printf("%s ", tokens[i]);
-   }
-   printf("\n");
-   */
 
    // parse the expression  
    if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
@@ -133,8 +132,12 @@ void evaluator (char *str)
          if (strcmp(elm, "rs") == 0) {
             sprintf(stack1[++top1], "%lli", op1 >> op2);
          }
-         //implement lr and rr here
-      
+         if (strcmp(elm, "lr") == 0) {
+            sprintf(stack1[++top1], "%lli", (op1 << op2) | (op1 >> (INT_BITS - op2)));
+         }
+         if (strcmp(elm, "rr") == 0) {
+            sprintf(stack1[++top1], "%lli", (op1 >> op2) | (op1 << (INT_BITS - op2)));
+         }
       }
       else { //elm is a number, keep pushing to stack1 until seeing an operator in stack2
          strcpy(stack1[++top1],elm);
@@ -162,6 +165,12 @@ void add_item_to_dict (char var[], int val)  //case 1 - variable initialized | c
       nof_dict_items++; 
    }
 
+   //print the values in dictionary
+   /*
+   for (int i = 0; i < nof_dict_items; i++) {
+      printf("%s: %lli", dict_keys[i], dict_vals[i]);
+   }
+   */
 }
 
 int begin(char *str)
