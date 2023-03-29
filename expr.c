@@ -12,7 +12,7 @@ char tokens[MAXTOKENS][TOKENLENGTH] ;
 char str[N] ; 
 int  cur = 0 ; 
 char dict_keys[MAXTOKENS][TOKENLENGTH] ;
-int dict_vals[MAXTOKENS];
+long long int dict_vals[MAXTOKENS];
 int nof_dict_items = 0;
 
 int  begin(char *) ;
@@ -37,15 +37,12 @@ int main()
    char    str[N]   ; 
    
    // read the tokens 
-   numtokens = 0 ; 
+   numtokens = 0 ;
    while (scanf("%s",tokens[numtokens]) != EOF) {
       numtokens++ ; 
    } 
    sprintf(tokens[numtokens],"$") ;
    numtokens++ ;
-
-   add_item_to_dict("x", 1);
-   add_item_to_dict("y", 2);
 
    //print the tokens
    /*
@@ -54,10 +51,10 @@ int main()
    }
    printf("\n");
    */
-   
+
    // parse the expression  
    if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
-      evaluator(str);
+      evaluator(str); //prints the result to the output
       }
    else {
       printf("Error!");
@@ -70,6 +67,7 @@ void evaluator (char *str)
 {
    int cur_eval = 0;
    long long int op1, op2;
+   char variable[TOKENLENGTH];
    char stack1[MAXTOKENS][TOKENLENGTH], stack2[MAXTOKENS][TOKENLENGTH] ;
    int top1, top2 = -1;
    char str_c[N];
@@ -102,7 +100,13 @@ void evaluator (char *str)
          sprintf(stack1[++top1], "%lli", ~op1);
       }
 
-      if ((strcmp(elm, "+") == 0)|| (strcmp(elm, "*") == 0) || (strcmp(elm, "-") == 0) ||(strcmp(elm, "&") == 0) || (strcmp(elm, "|") == 0) || (strcmp(elm,"xor") == 0) || (strcmp(elm,"ls") == 0) || (strcmp(elm,"rs") == 0) || (strcmp(elm,"lr") == 0) || (strcmp(elm,"rr") == 0) ) {//if elm is operand
+      if (strcmp(elm, "=") == 0) { //variable assignment
+            strcpy(variable, stack1[top1--]);
+            op1 = strtoll(stack1[top1--], NULL, 10);
+            add_item_to_dict(variable, op1);
+            break;
+         }
+      if ((strcmp(elm, "+") == 0)|| (strcmp(elm, "*") == 0) || (strcmp(elm, "-") == 0) ||(strcmp(elm, "&") == 0) || (strcmp(elm, "|") == 0) || (strcmp(elm,"xor") == 0) || (strcmp(elm,"ls") == 0) || (strcmp(elm,"rs") == 0) || (strcmp(elm,"lr") == 0) || (strcmp(elm,"rr") == 0)) {//if elm is operand
          op2 = strtoll(stack1[top1--], NULL, 10);
          op1 = strtoll(stack1[top1--], NULL, 10);
          if (strcmp(elm, "+") == 0) {
@@ -129,22 +133,35 @@ void evaluator (char *str)
          if (strcmp(elm, "rs") == 0) {
             sprintf(stack1[++top1], "%lli", op1 >> op2);
          }
+         //implement lr and rr here
+      
       }
       else { //elm is a number, keep pushing to stack1 until seeing an operator in stack2
          strcpy(stack1[++top1],elm);
       }
-      if(top2 < 0){
+      if(top2 < 0){ //no elm left, finished
          printf("%s", stack1[0]);
          break;
       }  
    } 
 }
 
-void add_item_to_dict (char var[], int val) 
+void add_item_to_dict (char var[], int val)  //case 1 - variable initialized | case 2 - variable reassigned to a different value
 {
-   sprintf(dict_keys[nof_dict_items], var);
-   dict_vals[nof_dict_items] = val;
-   nof_dict_items++; 
+   int in_dict = 0;
+   for (int i = 0; i < nof_dict_items; i++) {
+      if (strcmp(dict_keys[i], var) == 0) { //variable already exists in keys, change the value
+         in_dict = 1;
+         dict_vals[i] = val;
+         break;
+      }
+   }
+   if (! in_dict) { //variable initialized for the first time
+      sprintf(dict_keys[nof_dict_items], var);
+      dict_vals[nof_dict_items] = val;
+      nof_dict_items++; 
+   }
+
 }
 
 int begin(char *str)
@@ -165,7 +182,7 @@ int assignment(char *str)
 {
    char str1[N], str2[N] ; 
    str1[0] = str2[0] = '\0' ;
-   if (is_variable(tokens[cur])) { //case 1 - variable initialized | case 2 - variable reassigned to a different value
+   if (is_variable(tokens[cur])) { 
       strcpy(str1, tokens[cur]);
       strcat(str1, " ");
       cur++;
