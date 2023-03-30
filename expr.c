@@ -36,18 +36,48 @@ int main()
 {
    int     numtokens ; 
    char    str[N]   ; 
-   char input[N];
+   char input_line[N];
+   char* tkn;
    
    // read the tokens 
    numtokens = 0 ;
 
+   /*
+   while (true){
+      fgets(input_line, N, stdin);
+      str[strcspn(input_line, "\n")] = '\0'; // remove the newline character
+      char* tkn = strtok(input_line, " ");
+      do {
+         strcpy(tokens[numtokens], tkn);
+         printf("%s\n", tokens[numtokens]);
+         if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
+            break;
+         }
+         numtokens++ ;
+         tkn  = strtok(NULL, " ");
+      } while(tkn != NULL);
+      sprintf(tokens[numtokens],"$") ;
+      numtokens++ ;
+
+      // parse the expression  
+      if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
+         evaluator(str); //prints the result to the output
+         }
+      else {
+         printf("Error!");
+      }
+
+   }
+   */
+   
    while (scanf("%s",tokens[numtokens]) != EOF) {
       printf("%s\n", tokens[numtokens]);
       if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
          break;
       }
       numtokens++ ;
-   } 
+   }
+   
    sprintf(tokens[numtokens],"$") ;
    numtokens++ ;
 
