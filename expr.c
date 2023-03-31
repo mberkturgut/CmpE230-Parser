@@ -159,32 +159,35 @@ void evaluator (char *str) //calculates the parsed input stored in str
          if (strcmp(elm, "+") == 0) {
             sprintf(stack1[++top1], "%lli", op1 + op2);
          }
-         if (strcmp(elm, "*") == 0) {
+         else if (strcmp(elm, "*") == 0) {
             sprintf(stack1[++top1], "%lli", op1 * op2);
          }
-         if (strcmp(elm, "-") == 0) {
+         else if (strcmp(elm, "-") == 0) {
             sprintf(stack1[++top1], "%lli", op1 - op2);
          }
-         if (strcmp(elm, "&") == 0) {
+         else if (strcmp(elm, "&") == 0) {
             sprintf(stack1[++top1], "%lli", op1 & op2);
          }
-         if (strcmp(elm, "|") == 0) {
+         else if (strcmp(elm, "|") == 0) {
             sprintf(stack1[++top1], "%lli", op1 | op2);
          }
-         if (strcmp(elm, "xor") == 0) {
+         else if (strcmp(elm, "xor") == 0) {
             sprintf(stack1[++top1], "%lli", op1 ^ op2);
          }
-         if (strcmp(elm, "ls") == 0) {
+         else if (strcmp(elm, "ls") == 0) {
             sprintf(stack1[++top1], "%lli", op1 << op2);
          }
-         if (strcmp(elm, "rs") == 0) {
+         else if (strcmp(elm, "rs") == 0) {
             sprintf(stack1[++top1], "%lli", op1 >> op2);
          }
-         if (strcmp(elm, "lr") == 0) {
+         else if (strcmp(elm, "lr") == 0) {
             sprintf(stack1[++top1], "%lli", (op1 << op2) | (op1 >> (INT_BITS - op2)));
          }
-         if (strcmp(elm, "rr") == 0) {
+         else if (strcmp(elm, "rr") == 0) {
             sprintf(stack1[++top1], "%lli", (op1 >> op2) | (op1 << (INT_BITS - op2)));
+         }
+         else {
+            ; //blank statement
          }
       }
       else { //elm is a number, keep pushing to stack1 until seeing an operator in stack2
