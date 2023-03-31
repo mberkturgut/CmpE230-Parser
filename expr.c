@@ -108,7 +108,7 @@ int main()
    return(0) ; 
 }
 
-void evaluator (char *str)
+void evaluator (char *str) //calculates the parsed input stored in str
 {
    int cur_eval = 0;
    long long int op1, op2;
@@ -129,12 +129,12 @@ void evaluator (char *str)
    } while(token_str != NULL);
    top1 = cur_eval-1; //last index of the first queue
    
-   //reverse the stack1, store in stack2. Reverse order used to get the first token when popping 
+   //reverse the stack1, store in stack2. Reverse order used to get from the first to last token when popping 
    while (top1 >= 0) {
       strcpy(stack2[++top2],stack1[top1--]);     
    }
 
-   //start evaluating: pop from stack2, make the operation, put the result to stack1 till there is no element left
+   //start evaluating: pop from stack2, make the operation, put the result to stack1 until there is no element left
    cur_eval = 0;
    while (true) {
       strcpy(elm,stack2[top2--]); //pop the element
@@ -144,7 +144,7 @@ void evaluator (char *str)
          continue;
       }
       
-      if (strcmp(elm, "=") == 0) { //variable assignment
+      if (strcmp(elm, "=") == 0) { //if the operation is variable assignment (stored in this postfix format: 2 x =)
             strcpy(variable, stack1[top1--]);
             op1 = strtoll(stack1[top1--], NULL, 10);
             add_item_to_dict(variable, op1);
@@ -510,26 +510,23 @@ int factor(char *str)
     return(0) ; 
 }
 
-int is_integer(char *token) 
-{
+//Helper functions
+int is_integer(char *token) {
     int isnumber = 1 ;
     char *q ; 
 
     for(q = token ; *q != '\0' ; q++) {
         isnumber = isnumber && isdigit(*q) ;
     }
-
     return(isnumber) ; 
 }    
 
-int is_variable(char *token) 
-{
+int is_variable(char *token) {
     int isvariable = 1 ;
     char *q ; 
 
     for(q = token ; *q != '\0' ; q++) {
         isvariable = isvariable && (isupper(*q) || islower(*q)) ;
     }
-
     return(isvariable) ; 
 }    
