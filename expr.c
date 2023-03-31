@@ -139,12 +139,12 @@ void evaluator (char *str)
    cur_eval = 0;
    while (true) {
       strcpy(elm,stack2[top2--]); //pop the element
-      
       if((strcmp(elm, "not")) == 0){
          op1 = strtoll(stack1[top1--], NULL, 10);
          sprintf(stack1[++top1], "%lli", ~op1);
+         continue;
       }
-
+      
       if (strcmp(elm, "=") == 0) { //variable assignment
             strcpy(variable, stack1[top1--]);
             op1 = strtoll(stack1[top1--], NULL, 10);
