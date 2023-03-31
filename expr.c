@@ -4,8 +4,8 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-#define MAXTOKENS   100 
-#define TOKENLENGTH 20 
+#define MAXTOKENS   128 
+#define TOKENLENGTH 256 
 #define N  1000
 #define INT_BITS 64 // to use in left & right rotation
 
@@ -35,7 +35,7 @@ void evaluator (char *);
 int main()
 {
    char input_line[N];
-
+   printf(">"); //input symbol
    //read the line & tokenize
     while (fgets(input_line, sizeof(input_line), stdin) != NULL){
       int     numtokens = 0 ; 
@@ -103,7 +103,8 @@ int main()
          }
       else {
          printf("Error!\n");
-      }      
+      }
+      printf(">"); //input symbol    
    }
    return(0) ; 
 }
