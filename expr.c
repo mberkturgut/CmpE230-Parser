@@ -97,7 +97,6 @@ int main()
       } while(tkn != NULL);
       sprintf(tokens[numtokens],"$") ;
       numtokens++ ;
-
       // parse the expression  
       if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
          evaluator(str); //prints the result to the output
@@ -206,7 +205,7 @@ void add_item_to_dict (char var[], int val)  //case 1 - variable initialized | c
       }
    }
    if (! in_dict) { //variable initialized for the first time
-      sprintf(dict_keys[nof_dict_items], var);
+      strcpy(dict_keys[nof_dict_items], var);
       dict_vals[nof_dict_items] = val;
       nof_dict_items++; 
    }
@@ -482,7 +481,7 @@ int factor(char *str)
       for (int i = 0; i < nof_dict_items; i++) {
          if (strcmp(dict_keys[i], tokens[cur]) == 0) {
             in_dict = 1;
-            sprintf(tokens[cur], "%d", dict_vals[i]); // if in dict, use value instead
+            sprintf(tokens[cur], "%lli", dict_vals[i]); // if in dict, use value instead
             break;
          }
       }
@@ -534,4 +533,3 @@ int is_variable(char *token)
 
     return(isvariable) ; 
 }    
- 
