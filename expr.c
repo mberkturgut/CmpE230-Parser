@@ -38,6 +38,7 @@ int main()
    printf(">"); //input symbol
    //read the line & tokenize
     while (fgets(input_line, sizeof(input_line), stdin) != NULL){
+      
       int     numtokens = 0 ; 
       char    str[N] = "" ; 
       char* tkn;
@@ -82,6 +83,7 @@ int main()
       }
       //if blank input or only comment, continue and scan the next line
       if (strlen(tokenized_line) == 0 || tokenized_line[0] == '%'){
+         printf(">"); //input symbol 
          continue;
       }
 
