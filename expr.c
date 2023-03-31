@@ -34,69 +34,77 @@ void evaluator (char *);
 
 int main()
 {
-   int     numtokens ; 
-   char    str[N]   ; 
    char input_line[N];
-   char* tkn;
-   char tokenized_line[N] = "";
-   
-   // read the line & tokenize
-    fgets(input_line, sizeof(input_line), stdin);
-    int len = strlen(input_line);
-    
-    for(int i = 0; i < len; i++) {
-        if(input_line[i] == ' ') {
-            for(int j = i; j < len; j++) {
-                input_line[j] = input_line[j+1];
-            }
-            len--;
-            i--;
-        }
-    }
 
-    for (int i = 0; i < len; i++) {
-        if (isdigit(input_line[i])) {
-            strncat(tokenized_line, &input_line[i],1);
-            while (isdigit(input_line[i+1])) {
-                i++;
-                strncat(tokenized_line, &input_line[i],1);
-            }
-            strcat(tokenized_line," ");
-        } else if (isalpha(input_line[i])) {
-            strncat(tokenized_line, &input_line[i],1);
-            while (isalpha(input_line[i+1])) {
-                i++;
-                strncat(tokenized_line, &input_line[i],1);
-            }
-            strcat(tokenized_line," ");
-        } else if (ispunct(input_line[i])) {
-            strncat(tokenized_line, &input_line[i],1);
-            strcat(tokenized_line," ");
-        } else if (isspace(input_line[i])) {
-            continue;
-        }
-    }
+   //read the line & tokenize
+    while (fgets(input_line, sizeof(input_line), stdin) != NULL){
+      int     numtokens = 0 ; 
+      char    str[N] = "" ; 
+      char* tkn;
+      char tokenized_line[N] = "";
 
-   //put the tokens into array
-   tkn = strtok(tokenized_line, " ");
-   do {
-      strcpy(tokens[numtokens], tkn);
-      printf("%s\n", tokens[numtokens]);
-      if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
-         break;
+      //reset the values
+      strcpy(str,"") ; 
+      cur = 0 ;
+
+      input_line[strcspn(input_line,"\n")] = '\0'; //remove "\n"
+      int len = strlen(input_line);
+      for(int i = 0; i < len; i++) {
+         if(input_line[i] == ' ') {
+               for(int j = i; j < len; j++) {
+                  input_line[j] = input_line[j+1];
+               }
+               len--;
+               i--;
+         }
       }
-      numtokens++;
-      tkn = strtok(NULL, " ");
-   } while(tkn != NULL);
-   sprintf(tokens[numtokens],"$") ;
-   numtokens++ ;
-
-   // parse the expression  
-   if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
-      evaluator(str); //prints the result to the output
+      for (int i = 0; i < len; i++) {
+         if (isdigit(input_line[i])) {
+               strncat(tokenized_line, &input_line[i],1);
+               while (isdigit(input_line[i+1])) {
+                  i++;
+                  strncat(tokenized_line, &input_line[i],1);
+               }
+               strcat(tokenized_line," ");
+         } else if (isalpha(input_line[i])) {
+               strncat(tokenized_line, &input_line[i],1);
+               while (isalpha(input_line[i+1])) {
+                  i++;
+                  strncat(tokenized_line, &input_line[i],1);
+               }
+               strcat(tokenized_line," ");
+         } else if (ispunct(input_line[i])) {
+               strncat(tokenized_line, &input_line[i],1);
+               strcat(tokenized_line," ");
+         } else if (isspace(input_line[i])) {
+               continue;
+         }
       }
-   else {
-      printf("Error!");
+      //if blank input, scan the next line
+      if (strlen(tokenized_line) == 0){
+         continue;
+      }
+
+      //put the tokens into array
+      tkn = strtok(tokenized_line, " ");
+      do {
+         strcpy(tokens[numtokens], tkn);
+         if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
+            break;
+         }
+         numtokens++;
+         tkn = strtok(NULL, " ");
+      } while(tkn != NULL);
+      sprintf(tokens[numtokens],"$") ;
+      numtokens++ ;
+
+      // parse the expression  
+      if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
+         evaluator(str); //prints the result to the output
+         }
+      else {
+         printf("Error!\n");
+      }      
    }
    return(0) ; 
 }
@@ -112,9 +120,8 @@ void evaluator (char *str)
    char elm[TOKENLENGTH];
    char operand;
 
-   strcpy(str_c,str);
-   
    //add to the stack
+   strcpy(str_c,str);
    char* token_str = strtok(str_c, " ");
    do {
       strcpy(stack1[cur_eval], token_str);
@@ -182,7 +189,7 @@ void evaluator (char *str)
          strcpy(stack1[++top1],elm);
       }
       if(top2 < 0){ //no elm left, finished
-         printf("%s", stack1[0]);
+         printf("%s\n", stack1[0]);
          break;
       }  
    } 
@@ -494,7 +501,6 @@ int factor(char *str)
           return(0) ;    
        }
        if ( strcmp(tokens[cur],")") != 0 ) { 
-          printf("Error: expecting paranthesis\n") ; 
           return(0) ;
        }
        cur++ ; 
@@ -502,7 +508,6 @@ int factor(char *str)
        return(1) ; 
 
     }
-    printf("Error: expecting factor\n") ; 
     return(0) ; 
 }
 
