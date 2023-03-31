@@ -80,8 +80,8 @@ int main()
                continue;
          }
       }
-      //if blank input, scan the next line
-      if (strlen(tokenized_line) == 0){
+      //if blank input or only comment, continue and scan the next line
+      if (strlen(tokenized_line) == 0 || tokenized_line[0] == '%'){
          continue;
       }
 
