@@ -38,46 +38,56 @@ int main()
    char    str[N]   ; 
    char input_line[N];
    char* tkn;
+   char tokenized_line[N] = "";
    
-   // read the tokens 
-   numtokens = 0 ;
+   // read the line & tokenize
+    fgets(input_line, sizeof(input_line), stdin);
+    int len = strlen(input_line);
+    
+    for(int i = 0; i < len; i++) {
+        if(input_line[i] == ' ') {
+            for(int j = i; j < len; j++) {
+                input_line[j] = input_line[j+1];
+            }
+            len--;
+            i--;
+        }
+    }
 
-   /*
-   while (true){
-      fgets(input_line, N, stdin);
-      str[strcspn(input_line, "\n")] = '\0'; // remove the newline character
-      char* tkn = strtok(input_line, " ");
-      do {
-         strcpy(tokens[numtokens], tkn);
-         printf("%s\n", tokens[numtokens]);
-         if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
-            break;
-         }
-         numtokens++ ;
-         tkn  = strtok(NULL, " ");
-      } while(tkn != NULL);
-      sprintf(tokens[numtokens],"$") ;
-      numtokens++ ;
+    for (int i = 0; i < len; i++) {
+        if (isdigit(input_line[i])) {
+            strncat(tokenized_line, &input_line[i],1);
+            while (isdigit(input_line[i+1])) {
+                i++;
+                strncat(tokenized_line, &input_line[i],1);
+            }
+            strcat(tokenized_line," ");
+        } else if (isalpha(input_line[i])) {
+            strncat(tokenized_line, &input_line[i],1);
+            while (isalpha(input_line[i+1])) {
+                i++;
+                strncat(tokenized_line, &input_line[i],1);
+            }
+            strcat(tokenized_line," ");
+        } else if (ispunct(input_line[i])) {
+            strncat(tokenized_line, &input_line[i],1);
+            strcat(tokenized_line," ");
+        } else if (isspace(input_line[i])) {
+            continue;
+        }
+    }
 
-      // parse the expression  
-      if (begin(str) && (strcmp("$", tokens[cur]) == 0)) { //to check if the expression is fully parsed
-         evaluator(str); //prints the result to the output
-         }
-      else {
-         printf("Error!");
-      }
-
-   }
-   */
-   
-   while (scanf("%s",tokens[numtokens]) != EOF) {
+   //put the tokens into array
+   tkn = strtok(tokenized_line, " ");
+   do {
+      strcpy(tokens[numtokens], tkn);
       printf("%s\n", tokens[numtokens]);
       if ((strcmp(tokens[numtokens],"%") == 0)) { //rest is comments, dont read
          break;
       }
-      numtokens++ ;
-   }
-   
+      numtokens++;
+      tkn = strtok(NULL, " ");
+   } while(tkn != NULL);
    sprintf(tokens[numtokens],"$") ;
    numtokens++ ;
 
@@ -88,7 +98,6 @@ int main()
    else {
       printf("Error!");
    }
-  
    return(0) ; 
 }
 
