@@ -1,6 +1,6 @@
 # CmpE230-Parser
 
-This is a advance calculator performing the following basic & bitwise operations:
+This is an advance calculator performing the following basic & bitwise operations:
 
 |Operation|Explanation|
 |---|---|
@@ -19,3 +19,6 @@ This is a advance calculator performing the following basic & bitwise operations
 It takes inputs via an interpreter. It parses the input through a grammar that supports variable assignment, retriaval and expressions in parentheses. For more information refer to the project report.
 
 ![image](https://user-images.githubusercontent.com/95189786/229363113-65a251dd-8f2b-46f8-8b67-dc2b283e0abd.png)
+
+To run the program simply compile advcalc.c, which will give you the interpreter mode. You can also run it on a text file via terminal (input.txt provided as an example) by the following command:
+> ./advcalc < input.txt
