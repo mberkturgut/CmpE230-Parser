@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #define MAXTOKENS   128 
-#define TOKENLENGTH 260 //to store up to 256 char long vars
+#define TOKENLENGTH 256 
 #define N  1000
 #define INT_BITS 64 // to use in left & right rotation
 
